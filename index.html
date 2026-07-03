@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Darshmehar × Eemanjot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Cinzel:wght@500;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Great+Vibes&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+    --bg-deep: #12081f;
+    --bg-plum: #250c28;
+    --gold: #c9a769;
+    --gold-soft: rgba(201,167,105,0.28);
+    --rose: #d98aa3;
+    --ink: #f4ecf3;
+    --ink-dim: rgba(244,236,243,0.62);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'EB Garamond', serif;
+    background: radial-gradient(120% 90% at 50% -10%, var(--bg-plum), var(--bg-deep) 60%);
+    color: var(--ink);
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+:focus-visible{ outline: 1.5px solid var(--gold); outline-offset: 3px; }
+
+#intro {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle, #180a24, #060209);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    font-size: 1rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    z-index: 9999;
+    animation: fadeOut 0.7s ease-out 2.3s forwards;
+}
+@keyframes fadeOut { to { opacity: 0; pointer-events: none; } }
+
+.sky { position: fixed; inset: 0; overflow: hidden; z-index: 1; }
+
+.star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle infinite ease-in-out;
+}
+@keyframes twinkle {
+    0%, 100% { opacity: .1; transform: scale(.8); }
+    50% { opacity: 0.9; transform: scale(1.3); box-shadow: 0 0 8px #fff; }
+}
+
+.moon {
+    position: absolute;
+    top: 40px;
+    right: 50px;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #fdf6ea;
+    box-shadow: 0 0 35px rgba(201,167,105,0.35), 0 0 80px rgba(201,167,105,0.15), inset -12px -12px 25px rgba(0,0,0,0.25);
+    animation: floatMoon 6s ease-in-out infinite;
+}
+@keyframes floatMoon { 50% { transform: translateY(-8px); } }
+
+.shooting {
+    position: absolute;
+    width: 140px;
+    height: 1.5px;
+    background: linear-gradient(to right, #fff, var(--gold), transparent);
+    transform: rotate(-35deg);
+    animation: shoot 2.5s linear forwards;
+}
+@keyframes shoot {
+    from { transform: translate(-150px, -150px) rotate(-35deg); opacity: 1; }
+    to { transform: translate(1400px, 900px) rotate(-35deg); opacity: 0; }
+}
+
+.container {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+.card {
+    max-width: 600px;
+    width: 100%;
+    background: rgba(255, 255, 255, .025);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    border: 1px solid var(--gold-soft);
+    border-radius: 6px;
+    padding: 44px 36px;
+    text-align: center;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.45);
+    animation: slideUp 1s cubic-bezier(0.21, 1.02, 0.43, 1), cardGlow 6s ease-in-out infinite 1s;
+    position: relative;
+}
+.card::before, .card::after{
+    content:"";
+    position:absolute;
+    width:22px; height:22px;
+    border: 1px solid var(--gold-soft);
+}
+.card::before{ top:10px; left:10px; border-right:none; border-bottom:none; }
+.card::after{ bottom:10px; right:10px; border-left:none; border-top:none; }
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* --- Signature: constellation distance map --- */
+.map-strip{ margin-bottom: 18px; }
+.map-svg{ width:100%; height:auto; display:block; }
+.map-svg .thread{ fill:none; stroke: var(--gold); stroke-width:1; stroke-dasharray:5 6; opacity:.55; }
+.map-svg .point{ fill: var(--rose); filter: drop-shadow(0 0 4px rgba(217,138,163,.8)); }
+.map-svg .pulse{ fill: var(--gold); filter: drop-shadow(0 0 5px rgba(201,167,105,.9)); }
+.map-svg .map-label{ font-family:'Space Mono', monospace; font-size:9px; fill: var(--ink-dim); letter-spacing: 2px; }
+.map-distance{ margin-top: 2px; }
+.map-distance-num{ font-family:'Space Mono', monospace; font-weight:700; font-size: 2rem; color: var(--gold); letter-spacing: 1px; }
+.map-distance-unit{ display:block; font-family:'Cinzel', serif; font-size:.62rem; letter-spacing:4px; color: var(--rose); margin-top: 3px; text-transform: uppercase; }
+
+.eyebrow{
+    display:block;
+    font-family:'Cinzel', serif;
+    font-size: .68rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-family: 'Great Vibes', cursive;
+    font-weight: 400;
+    font-size: 3.4rem;
+    color: var(--ink);
+    text-shadow: 0 0 18px rgba(201,167,105,0.35);
+    line-height: 1;
+}
+.tagline{
+    display:block;
+    font-family:'EB Garamond', serif;
+    font-style: italic;
+    font-size: .95rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin: 10px 0 26px;
+}
+
+/* --- Contact: reveal-to-view for privacy --- */
+.contact-chip{ margin-bottom: 22px; }
+.reveal-btn{
+    background: transparent;
+    border: 1px solid var(--gold-soft);
+    color: var(--gold);
+    font-family:'Cinzel', serif;
+    font-size: .68rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 9px 20px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+.reveal-btn:hover{ background: var(--gold-soft); color: var(--ink); }
+.contact-number{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'Space Mono', monospace;
+    font-size: .9rem;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--gold-soft);
+    padding-bottom: 2px;
+}
+.contact-number:hover{ color: var(--rose); }
+.hidden{ display:none; }
+
+.quote-container{
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px 0 28px;
+    position: relative;
+}
+.quote {
+    color: var(--ink-dim);
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    transition: opacity 0.5s ease;
+    position: relative;
+    padding: 0 22px;
+}
+.quote::before, .quote::after{
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--gold);
+    font-size: 1.6rem;
+    position: absolute;
+    opacity: .7;
+}
+.quote::before{ content:"“"; left:-4px; top:-6px; }
+.quote::after{ content:"”"; right:-4px; bottom:-14px; }
+
+/* --- Astrolabe-style dual clocks --- */
+.dial-wrap{
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 32px;
+}
+.dial{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    padding: 7px;
+    background: repeating-conic-gradient(var(--gold) 0deg 1.4deg, transparent 1.4deg 30deg);
+}
+.dial-inner{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--bg-deep);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.dial-label{ font-family:'Cinzel', serif; font-size: .58rem; letter-spacing: 2px; color: var(--rose); text-transform: uppercase; }
+.dial-time{ font-family:'Space Mono', monospace; font-size: .85rem; color: var(--ink); margin-top: 5px; }
+.dial-city{ font-family:'EB Garamond', serif; font-style: italic; font-size: .68rem; color: var(--ink-dim); margin-top: 3px; }
+
+/* --- Jukebox, vinyl style --- */
+.jukebox {
+    background: rgba(0,0,0,0.15);
+    border: 1px solid var(--gold-soft);
+    border-radius: 6px;
+    padding: 22px 18px;
+    margin-bottom: 26px;
+}
+.jukebox h3 {
+    font-family:'Cinzel', serif;
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--rose);
+    margin-bottom: 16px;
+}
+.track-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 9px;
+}
+.track-btn {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    background: transparent;
+    border: 1px solid rgba(244,236,243,0.1);
+    border-radius: 30px;
+    color: var(--ink-dim);
+    font-family: 'EB Garamond', serif;
+    font-size: .92rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+}
+.track-btn::before{
+    content:"";
+    display:inline-block;
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    margin-right: 9px;
+    background: repeating-radial-gradient(circle at center, var(--gold) 0 1px, transparent 1px 3px);
+}
+.track-btn:hover {
+    border-color: var(--gold-soft);
+    color: var(--ink);
+}
+.track-btn.active {
+    color: var(--ink);
+    border-color: var(--gold);
+    background: rgba(201,167,105,0.08);
+}
+.track-btn.active::before{ animation: spin 1.8s linear infinite; }
+@keyframes spin{ to{ transform: rotate(360deg); } }
+
+.visualizer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    height: 14px;
+    margin-top: 16px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.visualizer.playing { opacity: 1; }
+.bar { width: 3px; height: 100%; background: var(--gold); border-radius: 2px; }
+.visualizer.playing .bar:nth-child(odd) { animation: bounce 0.5s ease-in-out infinite alternate; }
+.visualizer.playing .bar:nth-child(even) { animation: bounce 0.8s ease-in-out infinite alternate-reverse; }
+@keyframes bounce { from { height: 3px; } to { height: 14px; } }
+
+/* --- Sunday vault, wax-seal capsule --- */
+.sunday-vault {
+    padding: 24px 20px;
+    background: rgba(0,0,0,0.15);
+    border: 1px solid var(--gold-soft);
+    border-radius: 6px;
+    margin-bottom: 28px;
+}
+.vault-header {
+    font-family:'Cinzel', serif;
+    font-size: .68rem;
+    letter-spacing: 2.5px;
+    color: var(--rose);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+.vault-content {
+    font-size: 1.02rem;
+    font-family: 'EB Garamond', serif;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.7;
+    white-space: pre-wrap;
+    text-align: left;
+}
+.countdown-timer {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.15rem;
+    color: var(--gold);
+    margin-top: 10px;
+    text-align: center;
+}
+.type-cursor { color: var(--gold); animation: blink 0.8s infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* --- Heart button --- */
+.heart {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+.heart:hover { transform: scale(1.08); }
+.heart-svg {
+    width: 58px;
+    height: 58px;
+    fill: rgba(201,167,105,0.12);
+    stroke: var(--gold);
+    stroke-width: 1.3;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 0 8px rgba(201,167,105,0.35));
+    animation: romanticBeat 2.2s infinite ease-in-out;
+}
+.heart:hover .heart-svg {
+    fill: rgba(217,138,163,0.75);
+    stroke: var(--rose);
+    filter: drop-shadow(0 0 14px rgba(217,138,163,0.55));
+}
+@keyframes romanticBeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.05); }
+    40% { transform: scale(1.01); }
+    60% { transform: scale(1.07); }
+}
+
+.constellation-burst{
+    position: fixed;
+    top: 50%; left: 50%;
+    width: 240px; height: 240px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 150;
+    opacity: 1;
+}
+.constellation-path{
+    fill: none;
+    stroke: var(--gold);
+    stroke-width: 1.4;
+    filter: drop-shadow(0 0 6px rgba(201,167,105,0.85));
+}
+
+/* --- Popup --- */
+.popup {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 4, 16, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    align-items: center;
+    justify-content: center;
+    z-index: 99;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+.popup.active { display: flex; opacity: 1; }
+.popupBox {
+    max-width: 460px;
+    width: 88%;
+    background: var(--bg-deep);
+    padding: 44px 32px;
+    border-radius: 6px;
+    text-align: center;
+    border: 1px solid var(--gold-soft);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    transform: scale(0.85);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.popup.active .popupBox { transform: scale(1); }
+.popupBox h2 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 3rem;
+    margin-bottom: 14px;
+    color: var(--ink);
+}
+.popupBox p { line-height: 1.75; color: var(--ink-dim); font-family: 'EB Garamond', serif; font-style: italic; font-size: 1.1rem; }
+
+#specialMsg { display: block; margin-top: 16px; font-size: 1.15rem; color: var(--rose); font-weight: 500; font-style: normal; }
+
+.close-btn {
+    padding: 9px 28px;
+    border: 1px solid var(--gold-soft);
+    border-radius: 40px;
+    cursor: pointer;
+    background: transparent;
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: .68rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    margin-top: 26px;
+}
+.close-btn:hover { background: var(--gold); color: var(--bg-deep); border-color: transparent; }
+
+.hearts-float {
+    position: fixed;
+    font-size: 1.4rem;
+    pointer-events: none;
+    z-index: 100;
+    animation: floatUp 2s cubic-bezier(0.075, 0.82, 0.165, 1) forwards;
+}
+@keyframes floatUp {
+    0% { transform: translateY(0) scale(0.5); opacity: 0; }
+    15% { opacity: 1; }
+    100% { transform: translateY(-160px) scale(1.2); opacity: 0; }
+}
+
+.fall-item {
+    position: fixed;
+    top: -50px;
+    pointer-events: none;
+    z-index: 2;
+    animation-name: fallSway;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    filter: drop-shadow(0 0 6px rgba(217,138,163,0.35));
+}
+@keyframes fallSway {
+    0%   { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+    10%  { opacity: .9; }
+    50%  { transform: translate(var(--sway, 40px), 55vh) rotate(180deg); }
+    90%  { opacity: .85; }
+    100% { transform: translate(calc(var(--sway, 40px) * -1), 112vh) rotate(360deg); opacity: 0; }
+}
+
+/* Warm romantic vignette breathing behind everything */
+.warm-glow {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(60% 45% at 50% 40%, rgba(217,138,163,0.12), transparent 70%);
+    animation: warmPulse 7s ease-in-out infinite;
+}
+@keyframes warmPulse {
+    0%, 100% { opacity: .5; }
+    50% { opacity: 1; }
+}
+
+@keyframes cardGlow {
+    0%, 100% { box-shadow: 0 25px 60px rgba(0,0,0,0.45), 0 0 35px rgba(217,138,163,0.08); }
+    50%      { box-shadow: 0 25px 60px rgba(0,0,0,0.45), 0 0 65px rgba(217,138,163,0.24); }
+}
+
+@media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media(max-width:768px){
+    h1 { font-size: 2.6rem; }
+    .card { padding: 34px 20px; }
+    .track-list { grid-template-columns: 1fr; }
+    .moon { width: 66px; height: 66px; top: 20px; right: 20px; }
+    .dial{ width: 84px; height: 84px; }
+}
+</style>
+</head>
+<body>
+
+<div id="intro">✦ reading the alignment of the stars ✦</div>
+
+<div class="warm-glow"></div>
+
+<div class="sky" id="sky">
+    <div class="moon"></div>
+</div>
+
+<div class="container">
+    <div class="card">
+
+        <div class="map-strip">
+            <svg class="map-svg" viewBox="0 0 560 110" aria-hidden="true">
+                <path id="threadPath" class="thread" d="M40,80 Q280,10 520,68"></path>
+                <circle cx="40" cy="80" r="4" class="point"></circle>
+                <circle cx="520" cy="68" r="4" class="point"></circle>
+                <circle r="3" class="pulse">
+                    <animateMotion dur="4.5s" repeatCount="indefinite" path="M40,80 Q280,10 520,68"></animateMotion>
+                </circle>
+                <text x="16" y="102" class="map-label">INDIA</text>
+                <text x="470" y="92" class="map-label">CANADA</text>
+            </svg>
+            <div class="map-distance">
+                <span class="map-distance-num">7,463</span>
+                <span class="map-distance-unit">Km Apart, Still Close</span>
+            </div>
+        </div>
+
+        <span class="eyebrow">A Long-Distance Almanac</span>
+        <h1>Darsh &amp; Eeman</h1>
+        <span class="tagline">Two Worlds, One Heart</span>
+
+        <div class="contact-chip" id="contactChip">
+            <button class="reveal-btn" id="revealBtn" onclick="revealContact()">✦ Tap To Reveal My Number</button>
+            <a href="tel:+919816498370" id="contactNumber" class="contact-number hidden">📞 +91 98164 98370</a>
+        </div>
+
+        <div class="quote-container">
+            <p class="quote" id="quote">Some people arrive unexpectedly and become impossible to forget.</p>
+        </div>
+
+        <div class="dial-wrap">
+            <div class="dial"><div class="dial-inner">
+                <span class="dial-label">IN</span>
+                <span class="dial-time" id="time-in">00:00:00</span>
+                <span class="dial-city">India</span>
+            </div></div>
+            <div class="dial"><div class="dial-inner">
+                <span class="dial-label">CA</span>
+                <span class="dial-time" id="time-ca">00:00:00</span>
+                <span class="dial-city">Canada</span>
+            </div></div>
+        </div>
+
+        <div class="jukebox">
+            <h3>Melodies Of Us</h3>
+            <div class="track-list">
+                <button class="track-btn" onclick="playTrack('door.mp3', this)">Door</button>
+                <button class="track-btn" onclick="playTrack('sajna.mp3', this)">Sajna</button>
+                <button class="track-btn" onclick="playTrack('obsessed.mp3', this)">Obsessed</button>
+                <button class="track-btn" onclick="playTrack('excuses.mp3', this)">Excuses</button>
+                <button class="track-btn" onclick="playTrack('Zaalim.mp3', this)">Zaalim</button>
+                <button class="track-btn" onclick="playTrack('Queen.mp3', this)">Queen</button>
+                <button class="track-btn" onclick="playTrack('MaahiVe.mp3', this)">Maahi Ve</button>
+                <button class="track-btn" onclick="playTrack('Jaaneman.mp3', this)">Jaaneman</button>
+                <button class="track-btn" onclick="playTrack('khaaab.mp3', this)">Khaab</button>
+                <button class="track-btn" onclick="playTrack('Supne.mp3', this)">Supne</button>
+            </div>
+            <div class="visualizer" id="visualizer">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+        </div>
+
+        <div class="sunday-vault" id="sundayVault">
+            <div class="vault-header" id="vaultHeader">🔒 Sunday Message Capsule</div>
+            <div class="vault-content" id="vaultContent">Gathering our moments...</div>
+        </div>
+
+        <button class="heart" onclick="openSecret()" title="Send Love">
+            <svg class="heart-svg" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<div class="popup" id="popup">
+    <div class="popupBox">
+        <h2>For You</h2>
+        <p>
+            Every shooting star crossing this sky carries a silent wish.<br><br>
+            Distance only tests how far love can travel before it returns home.<br>
+            <span id="specialMsg"></span>
+        </p>
+        <button class="close-btn" onclick="closeSecret()">Close</button>
+    </div>
+</div>
+
+<audio id="mainAudio" loop></audio>
+<audio id="bgMusic" loop>
+    <source src="cheque_mashup.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+/* ===================================================================
+   EDIT SUNDAY MESSAGE HERE
+   The vault unlocks automatically every Sunday and types this out.
+=================================================================== */
+const sundayMessage = `Dear Eemanjot,
+
+This is where I can write my Sunday message.
+– Darshmehar`;
+
+let sundayTyped = false;
+
+function typeWriter(text, element, speed = 26) {
+    element.innerHTML = '<span class="type-cursor">|</span>';
+    let i = 0;
+    const timer = setInterval(() => {
+        if (i < text.length) {
+            element.innerHTML = escapeHtml(text.slice(0, i + 1)) + '<span class="type-cursor">|</span>';
+            i++;
+        } else {
+            element.innerHTML = escapeHtml(text);
+            clearInterval(timer);
+        }
+    }, speed);
+}
+function escapeHtml(str) {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function revealContact() {
+    document.getElementById('revealBtn').classList.add('hidden');
+    document.getElementById('contactNumber').classList.remove('hidden');
+}
+
+function updateClocks() {
+    const now = new Date();
+    document.getElementById("time-in").innerText =
+        now.toLocaleTimeString("en-IN", { timeZone: "Asia/Kolkata", hour12: false });
+    document.getElementById("time-ca").innerText =
+        now.toLocaleTimeString("en-CA", { timeZone: "America/Vancouver", hour12: false });
+}
+setInterval(updateClocks, 1000);
+updateClocks();
+
+const bgMusic = document.getElementById("bgMusic");
+if (bgMusic) {
+    bgMusic.volume = 0.25;
+    document.addEventListener("click", () => {
+        bgMusic.play().catch(err => console.log("bgMusic play blocked:", err));
+    }, { once: true });
+}
+
+const sky = document.getElementById("sky");
+const starCount = 90;
+for (let i = 0; i < starCount; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 1;
+    s.style.width = size + "px";
+    s.style.height = size + "px";
+    s.style.left = Math.random() * 100 + "vw";
+    s.style.top = Math.random() * 100 + "vh";
+    s.style.animationDuration = (3 + Math.random() * 4) + "s";
+    s.style.animationDelay = Math.random() * 2 + "s";
+    sky.appendChild(s);
+}
+
+function triggerShootingStar() {
+    const star = document.createElement("div");
+    star.className = "shooting";
+    star.style.top = Math.random() * 30 + "vh";
+    star.style.left = Math.random() * 50 + "vw";
+    sky.appendChild(star);
+    setTimeout(() => star.remove(), 2500);
+}
+setInterval(triggerShootingStar, 8000);
+
+const mainAudio = document.getElementById("mainAudio");
+const viz = document.getElementById("visualizer");
+let currentSrc = "";
+
+function playTrack(fileName, element) {
+    bgMusic.pause();
+    const buttons = document.querySelectorAll('.track-btn');
+
+    if (currentSrc === fileName && !mainAudio.paused) {
+        mainAudio.pause();
+        element.classList.remove('active');
+        viz.classList.remove('playing');
+        bgMusic.play().catch(() => {});
+    } else {
+        buttons.forEach(btn => btn.classList.remove('active'));
+        if (currentSrc !== fileName) {
+            mainAudio.src = fileName;
+            currentSrc = fileName;
+        }
+        mainAudio.play().catch(err => console.log("track play blocked:", err));
+        element.classList.add('active');
+        viz.classList.add('playing');
+    }
+}
+
+function updateSundayVault() {
+    const now = new Date();
+    const dayOfWeek = now.getDay();
+    const vaultHeader = document.getElementById("vaultHeader");
+    const vaultContent = document.getElementById("vaultContent");
+
+    if (dayOfWeek === 0) {
+        vaultHeader.innerHTML = "🔓 Unlocked Sunday Capsule Only For You";
+        if (!sundayTyped) {
+            typeWriter(sundayMessage, vaultContent);
+            sundayTyped = true;
+        }
+    } else {
+        sundayTyped = false;
+        vaultHeader.innerHTML = "🔒 Sunday Capsule Is Locked";
+
+        const nextSunday = new Date(now);
+        nextSunday.setDate(now.getDate() + (7 - dayOfWeek));
+        nextSunday.setHours(0, 0, 0, 0);
+
+        const diff = nextSunday - now;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        vaultContent.innerHTML =
+            `Next love letter arrives in:<div class="countdown-timer">${days}d ${hours}h ${minutes}m ${seconds}s</div>`;
+    }
+}
+setInterval(updateSundayVault, 1000);
+updateSundayVault();
+
+const quotes = [
+    "Some people arrive unexpectedly and become impossible to forget.",
+    "Distance changes places, not feelings.",
+    "Some people feel like destiny at 3AM.",
+    "The moon knows every secret conversation.",
+    "Some stories begin somewhere between fate and choice.",
+    "Two souls, one sky, infinite possibilities.",
+    "Time zones can't measure what we share.",
+    "You're my favorite hello and my hardest goodbye.",
+    "In every timeline, I choose you.",
+    "Home isn't a place, it's the sound of your voice.",
+    "Every love song makes a little more sense now.",
+    "The heart doesn't know about time zones.",
+    "Still my favorite thought, first thing every morning."
+];
+let currentQuote = 0;
+const quoteElem = document.getElementById("quote");
+setInterval(() => {
+    quoteElem.style.opacity = "0";
+    setTimeout(() => {
+        currentQuote = (currentQuote + 1) % quotes.length;
+        quoteElem.innerText = quotes[currentQuote];
+        quoteElem.style.opacity = "1";
+    }, 500);
+}, 6000);
+
+function openSecret() {
+    const popup = document.getElementById("popup");
+    popup.style.display = "flex";
+    setTimeout(() => popup.classList.add('active'), 10);
+
+    const messages = [
+        "You found it 💛",
+        "Every moment with you matters ✨",
+        "Distance is just a number 🌍",
+        "You mean everything 💫",
+        "My heart lives where you are 💕",
+        "Forever starts now 🌙"
+    ];
+    document.getElementById("specialMsg").innerText = messages[Math.floor(Math.random() * messages.length)];
+    createHeartFloats();
+    burstConstellationHeart();
+}
+
+function createHeartFloats() {
+    const heartBtn = document.querySelector('.heart');
+    const rect = heartBtn.getBoundingClientRect();
+
+    for (let i = 0; i < 7; i++) {
+        setTimeout(() => {
+            const heart = document.createElement("div");
+            heart.className = "hearts-float";
+            heart.innerHTML = ["💕", "❤️", "💖", "✨"][Math.floor(Math.random() * 4)];
+            heart.style.left = (rect.left + (rect.width / 2) + (Math.random() * 40 - 20)) + "px";
+            heart.style.top = (rect.top + (rect.height / 2) - 10) + "px";
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 2000);
+        }, i * 100);
+    }
+}
+
+// Signature moment: draws a constellation-style heart across the sky
+function burstConstellationHeart() {
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("class", "constellation-burst");
+    svg.setAttribute("viewBox", "0 0 100 100");
+
+    const path = document.createElementNS(svgNS, "path");
+    path.setAttribute("d", "M50 30 C50 12 26 10 16 24 C6 38 16 54 50 80 C84 54 94 38 84 24 C74 10 50 12 50 30 Z");
+    path.setAttribute("class", "constellation-path");
+    svg.appendChild(path);
+    document.body.appendChild(svg);
+
+    const len = path.getTotalLength();
+    path.style.strokeDasharray = len;
+    path.style.strokeDashoffset = len;
+    requestAnimationFrame(() => {
+        path.style.transition = "stroke-dashoffset 1.1s ease";
+        path.style.strokeDashoffset = "0";
+    });
+    setTimeout(() => { svg.style.transition = "opacity .6s ease"; svg.style.opacity = "0"; }, 1400);
+    setTimeout(() => svg.remove(), 2100);
+}
+
+function closeSecret() {
+    const popup = document.getElementById("popup");
+    popup.classList.remove('active');
+    setTimeout(() => popup.style.display = "none", 400);
+}
+
+// A soft mix of petals, hearts and stardust drifting down with a gentle sway
+const fallEmojis = ["🌹", "🌹", "🌺", "❤️", "💕", "✨", "💫"];
+function createFallItem() {
+    const item = document.createElement("div");
+    item.className = "fall-item";
+    item.innerHTML = fallEmojis[Math.floor(Math.random() * fallEmojis.length)];
+    item.style.left = Math.random() * 100 + "vw";
+    item.style.setProperty("--sway", (Math.random() * 100 - 50) + "px");
+    const duration = 7 + Math.random() * 6;
+    item.style.animationDuration = duration + "s";
+    item.style.fontSize = (14 + Math.random() * 12) + "px";
+    document.body.appendChild(item);
+    setTimeout(() => item.remove(), (duration + 1) * 1000);
+}
+setInterval(createFallItem, 900);
+</script>
+
+</body>
+</html>
